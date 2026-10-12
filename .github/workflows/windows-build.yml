@@ -1,0 +1,75 @@
+name: Build QueAN Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号（形如 v1.0.0，决定更新清单里的版本）'
+        required: true
+        default: 'v1.0.0'
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.15.0'
+          cache: pnpm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.95.0'
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: '.'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Apply updater public key
+        if: vars.TAURI_UPDATER_PUBKEY != ''
+        shell: pwsh
+        run: |
+          $conf = 'apps/app/tauri-release.conf.json'
+          $json = (Get-Content $conf -Raw) -replace '"pubkey"\s*:\s*"[^"]*"', ('"pubkey": "' + '${{ vars.TAURI_UPDATER_PUBKEY }}' + '"')
+          [IO.File]::WriteAllText((Resolve-Path $conf), $json)
+          Select-String -Path $conf -Pattern pubkey
+
+      - name: Build
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          AXOLOTL_SKIP_BLOCKBENCH_BUILD: '1'
+        run: |
+          $tag = if ('${{ github.event_name }}' -eq 'workflow_dispatch') { '${{ inputs.version }}' } else { $env:GITHUB_REF_NAME }
+          Write-Host "Building $tag"
+          node scripts/axolotl/local-release.mjs $tag
+
+      - name: Upload release bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: quean-release
+          path: release/**
+          if-no-files-found: error
