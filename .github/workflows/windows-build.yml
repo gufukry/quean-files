@@ -43,9 +43,14 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: '.'
+          cache-on-failure: true
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Install Blockbench skin editor dependencies
+        run: npm ci
+        working-directory: third-party/blockbench
 
       - name: Apply updater public key
         if: vars.TAURI_UPDATER_PUBKEY != ''
@@ -61,7 +66,6 @@ jobs:
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          AXOLOTL_SKIP_BLOCKBENCH_BUILD: '1'
         run: |
           $tag = if ('${{ github.event_name }}' -eq 'workflow_dispatch') { '${{ inputs.version }}' } else { $env:GITHUB_REF_NAME }
           Write-Host "Building $tag"
