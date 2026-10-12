@@ -65,7 +65,23 @@ jobs:
         run: |
           $tag = if ('${{ github.event_name }}' -eq 'workflow_dispatch') { '${{ inputs.version }}' } else { $env:GITHUB_REF_NAME }
           Write-Host "Building $tag"
-          node scripts/axolotl/local-release.mjs $tag
+          node scripts/axolotl/local-release.mjs $tag 2>&1 | Tee-Object -FilePath build-log.txt
+          $code = $LASTEXITCODE
+          if ($code -ne 0) {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Build failed (exit $code)"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value (Get-Content build-log.txt -Tail 200)
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
+          }
+          exit $code
+
+      - name: Upload build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build-log.txt
+          if-no-files-found: ignore
 
       - name: Upload release bundle
         uses: actions/upload-artifact@v4
