@@ -9582,7 +9582,7 @@
     "message": "Minecraft directories"
   },
   "app.settings.resources.minecraft-directories-description": {
-    "message": "Add one or more .minecraft folders for instances that use an external game directory. These folders are kept separate from Axolotl data."
+    "message": "Add one or more .minecraft folders for instances that use an external game directory. These folders are kept separate from QueAN data."
   },
   "app.settings.resources.minecraft-directory-mode": {
     "message": "Game directory mode"
@@ -10881,7 +10881,7 @@
     "message": "Installing version {version}"
   },
   "app.warning.running-as-admin": {
-    "message": "Axolotl is running as administrator. Drag-and-drop file import is disabled in this mode; please restart the launcher without administrator privileges."
+    "message": "QueAN is running as administrator. Drag-and-drop file import is disabled in this mode; please restart the launcher without administrator privileges."
   },
   "app.window-controls.close": {
     "message": "Close"

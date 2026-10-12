@@ -1,6 +1,6 @@
-pub const PRODUCT_NAME: &str = "Axolotl Launcher";
-pub const SHORT_PRODUCT_NAME: &str = "Axolotl";
-pub const WEBSITE: &str = "https://www.ghs.red";
+pub const PRODUCT_NAME: &str = "QueAN Launcher";
+pub const SHORT_PRODUCT_NAME: &str = "QueAN";
+pub const WEBSITE: &str = "https://qafaka.cc.cd/";
 pub const BUNDLE_IDENTIFIER: &str = "red.ghs.axolotl";
 pub const DEEP_LINK_SCHEME: &str = "axolotl";
 
