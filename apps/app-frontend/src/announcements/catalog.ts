@@ -30,6 +30,35 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
+        id: 'launcher-1.0.1',
+        version: '1.0.1',
+        publishedAt: '2026-10-13',
+        title: {
+            'en-US': 'QueAN Launcher 1.0.1',
+            'zh-CN': 'QueAN Launcher 1.0.1',
+        },
+        changes: {
+            added: [
+                {
+                    'en-US':
+                        'Update behavior now offers automatic update checks, notifying you as soon as a new version is found.',
+                    'zh-CN':
+                        '更新行为新增「自动检测更新」：启动启动器时自动检测，发现新版本立即弹窗提示。',
+                },
+            ],
+            changed: [
+                {
+                    'en-US': 'Only release versions are delivered; the beta channel was removed.',
+                    'zh-CN': '仅接收正式版本，移除测试版渠道切换。',
+                },
+                {
+                    'en-US': 'Removed the database isolation section from update settings.',
+                    'zh-CN': '移除更新设置中的「数据库隔离」。',
+                },
+            ],
+        },
+    },
+    {
         id: 'launcher-1.0.0',
         version: '1.0.0',
         publishedAt: '2026-10-13',

@@ -29,7 +29,7 @@ mod seed_map;
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct UpdatePreferences {
-    immediate_update_fetch: bool,
+    auto_check_updates: bool,
     updates_paused: bool,
 }
 
@@ -342,14 +342,8 @@ async fn get_update_preferences(
 ) -> api::Result<UpdatePreferences> {
     let settings_dir = update_channel_settings_dir(&app)?;
     let state = theseus::read_update_channel_state(&settings_dir).await?;
-    let is_beta = match state.active_channel.as_deref() {
-        Some("beta") => true,
-        Some("release") => false,
-        _ => theseus::default_update_channel() == "beta",
-    };
     Ok(UpdatePreferences {
-        immediate_update_fetch: is_beta
-            || state.immediate_update_fetch.unwrap_or(false),
+        auto_check_updates: state.auto_check_updates.unwrap_or(true),
         updates_paused: state.updates_paused.unwrap_or(false),
     })
 }
@@ -357,12 +351,12 @@ async fn get_update_preferences(
 #[tauri::command]
 async fn set_update_preferences(
     app: tauri::AppHandle,
-    immediate_update_fetch: bool,
+    auto_check_updates: bool,
     updates_paused: bool,
 ) -> api::Result<()> {
     let settings_dir = update_channel_settings_dir(&app)?;
     let mut state = theseus::read_update_channel_state(&settings_dir).await?;
-    state.immediate_update_fetch = Some(immediate_update_fetch);
+    state.auto_check_updates = Some(auto_check_updates);
     state.updates_paused = Some(updates_paused);
     write_update_channel_state(&app, &state)
 }

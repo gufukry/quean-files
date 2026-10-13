@@ -10169,6 +10169,12 @@
   "app.settings.updates.offline": {
     "message": "请连接到互联网后检查更新。"
   },
+  "app.settings.updates.auto-check": {
+    "message": "启动时自动检测更新"
+  },
+  "app.settings.updates.auto-check-description": {
+    "message": "每次启动 QueAN 时自动检测更新，发现新版本立即弹出通知提示更新。"
+  },
   "app.settings.updates.pause": {
     "message": "暂停更新"
   },

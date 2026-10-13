@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 
-export const APP_UPDATE_POPUP_DELAY_MS = 24 * 60 * 60 * 1000
+// 检测到更新后立即弹出通知（不再延迟）
+export const APP_UPDATE_POPUP_DELAY_MS = 0
 
 const UPDATE_PROMPT_STORAGE_KEY = 'modrinth-app-update-prompt-state'
 

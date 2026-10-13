@@ -268,7 +268,7 @@ async fn resolve_update_channel(
 #[derive(Default, Deserialize, Serialize)]
 pub struct UpdateChannelState {
     pub active_channel: Option<String>,
-    pub immediate_update_fetch: Option<bool>,
+    pub auto_check_updates: Option<bool>,
     pub updates_paused: Option<bool>,
 }
 
@@ -2241,7 +2241,7 @@ mod tests {
 
         std::fs::write(
             settings_dir.join(UPDATE_CHANNEL_STATE_FILE),
-            r#"{"immediate_update_fetch":true}"#,
+            r#"{"auto_check_updates":true}"#,
         )
         .unwrap();
         assert_eq!(

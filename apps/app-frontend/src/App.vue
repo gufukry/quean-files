@@ -517,8 +517,9 @@ async function checkUpdates() {
     }
 
     updatesEnabled.value = true
-    updatesPaused.value = (await getUpdatePreferences()).updatesPaused
-    if (updatesPaused.value) {
+    const preferences = await getUpdatePreferences()
+    updatesPaused.value = preferences.updatesPaused
+    if (updatesPaused.value || !preferences.autoCheckUpdates) {
         setTimeout(checkUpdates, 5 * 60 * 1000)
         return
     }
@@ -2627,7 +2628,6 @@ function showDelayedUpdatePopup() {
             ],
         })
     } else {
-        scheduleDelayedUpdatePopup()
         return
     }
 
@@ -2653,21 +2653,6 @@ async function performUpdateCheck() {
     const update = await checkAppUpdate(channel)
     if (!update) {
         console.log('No update available')
-        return 'up-to-date'
-    }
-
-    const publishedAt = Date.parse(update.publishedAt ?? '')
-    if (
-        channel === 'release' &&
-        !preferences.immediateUpdateFetch &&
-        !update.forceUpdate &&
-        (!Number.isFinite(publishedAt) || Date.now() < publishedAt + 24 * 60 * 60 * 1000)
-    ) {
-        console.warn(
-            Number.isFinite(publishedAt)
-                ? `Update ${update.version} is waiting for the release delay.`
-                : `Update ${update.version} has no valid published_at timestamp.`,
-        )
         return 'up-to-date'
     }
 

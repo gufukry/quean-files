@@ -10310,6 +10310,12 @@
   "app.settings.updates.offline": {
     "message": "Connect to the internet to check for updates."
   },
+  "app.settings.updates.auto-check": {
+    "message": "Check for updates automatically"
+  },
+  "app.settings.updates.auto-check-description": {
+    "message": "Check for updates every time QueAN starts, and show a notification as soon as an update is found."
+  },
   "app.settings.updates.pause": {
     "message": "Pause updates"
   },
