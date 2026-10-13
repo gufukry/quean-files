@@ -14,10 +14,8 @@ import {
 import { Avatar, Button, defineMessages, useVIntl } from '@modrinth/ui'
 import { getVersion } from '@tauri-apps/api/app'
 import {
-    defineAsyncComponent,
     inject,
     nextTick,
-    onErrorCaptured,
     onMounted,
     onScopeDispose,
     ref,
@@ -35,22 +33,6 @@ import { type AboutMemberExperience, getAboutMemberExperience } from './about-me
 import QqChannelIcon from './QqChannelIcon.vue'
 import SettingsSection from './SettingsSection.vue'
 import TeamMemberAvatar from './TeamMemberAvatar.vue'
-
-// Load the scene independently so the About content can render immediately.
-const AboutScene = defineAsyncComponent({
-    loader: () => import('../AboutScene.vue'),
-    suspensible: false,
-    onError(error, retry, fail) {
-        // one retry, then leave the scene slot empty instead of tearing down Settings
-        if ((error as { __aboutSceneRetried?: boolean }).__aboutSceneRetried) {
-            fail()
-            return
-        }
-        ;(error as { __aboutSceneRetried?: boolean }).__aboutSceneRetried = true
-        retry()
-    },
-})
-const aboutSceneFailed = ref(false)
 
 const { formatMessage } = useVIntl()
 const version = ref('')
@@ -77,12 +59,6 @@ onMounted(() => {
         .catch(() => {
             // keep empty version string; do not fail the settings category
         })
-})
-
-// Keep a failing 3D scene from bubbling into Settings Suspense / the shell.
-onErrorCaptured(() => {
-    aboutSceneFailed.value = true
-    return false
 })
 
 async function copyQqGroupNumber() {
@@ -341,7 +317,6 @@ const projectLinks = [
                         -webkit-mask-image: linear-gradient(to bottom, black 97%, transparent 100%);
                     "
                 >
-                    <AboutScene v-if="!aboutSceneFailed" />
                     <component
                         :is="activeMemberExperience?.component"
                         v-if="activeMemberExperience"
@@ -367,7 +342,7 @@ const projectLinks = [
             </p>
         </section>
 
-        <SettingsSection>
+        <SettingsSection v-if="teamMembers.length">
             <template #header>
                 <h3
                     class="m-0 flex items-center gap-2 text-base font-semibold text-[var(--color-text-primary)]"
