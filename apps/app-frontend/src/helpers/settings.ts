@@ -46,6 +46,7 @@ Memorysettings {
 export type UpdateChannel = 'release' | 'beta'
 export type UpdatePreferences = {
     autoCheckUpdates: boolean
+    autoRestartAfterUpdate: boolean
     updatesPaused: boolean
 }
 export type DownloadSourceMode =

@@ -2770,6 +2770,22 @@ async function installUpdate() {
     }, 250)
 }
 
+async function autoRestartAfterUpdateIfEnabled() {
+    if (!finishedDownloading.value || restarting.value) return
+    try {
+        if (!(await getUpdatePreferences()).autoRestartAfterUpdate) return
+    } catch (error) {
+        console.warn('Failed to read update preferences', error)
+        return
+    }
+    console.info('Installing downloaded update and restarting automatically')
+    await installUpdate()
+}
+
+watch(finishedDownloading, (finished) => {
+    if (finished) void autoRestartAfterUpdateIfEnabled()
+})
+
 setAppUpdateActions({
     check: manualUpdateCheck,
     download: downloadAvailableUpdate,

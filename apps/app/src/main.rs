@@ -30,6 +30,7 @@ mod seed_map;
 #[serde(rename_all = "camelCase")]
 struct UpdatePreferences {
     auto_check_updates: bool,
+    auto_restart_after_update: bool,
     updates_paused: bool,
 }
 
@@ -344,6 +345,7 @@ async fn get_update_preferences(
     let state = theseus::read_update_channel_state(&settings_dir).await?;
     Ok(UpdatePreferences {
         auto_check_updates: state.auto_check_updates.unwrap_or(true),
+        auto_restart_after_update: state.auto_restart_after_update.unwrap_or(true),
         updates_paused: state.updates_paused.unwrap_or(false),
     })
 }
@@ -352,11 +354,13 @@ async fn get_update_preferences(
 async fn set_update_preferences(
     app: tauri::AppHandle,
     auto_check_updates: bool,
+    auto_restart_after_update: bool,
     updates_paused: bool,
 ) -> api::Result<()> {
     let settings_dir = update_channel_settings_dir(&app)?;
     let mut state = theseus::read_update_channel_state(&settings_dir).await?;
     state.auto_check_updates = Some(auto_check_updates);
+    state.auto_restart_after_update = Some(auto_restart_after_update);
     state.updates_paused = Some(updates_paused);
     write_update_channel_state(&app, &state)
 }

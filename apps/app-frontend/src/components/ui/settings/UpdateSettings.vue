@@ -62,6 +62,15 @@ const messages = defineMessages({
         defaultMessage:
             'Check for updates every time QueAN starts, and show a notification as soon as an update is found.',
     },
+    autoRestart: {
+        id: 'app.settings.updates.auto-restart',
+        defaultMessage: 'Restart automatically after updating',
+    },
+    autoRestartDescription: {
+        id: 'app.settings.updates.auto-restart-description',
+        defaultMessage:
+            'Once an update has finished downloading, install it and restart QueAN automatically.',
+    },
     check: {
         id: 'app.settings.updates.check',
         defaultMessage: 'Check for updates',
@@ -178,6 +187,19 @@ async function checkForUpdates() {
                     <Toggle
                         id="auto-update-check"
                         v-model="updatePreferences.autoCheckUpdates"
+                        @update:model-value="saveUpdatePreferences"
+                    />
+                </template>
+            </SettingsRow>
+            <SettingsRow>
+                <template #label>{{ formatMessage(messages.autoRestart) }}</template>
+                <template #description>{{
+                    formatMessage(messages.autoRestartDescription)
+                }}</template>
+                <template #control>
+                    <Toggle
+                        id="auto-restart-after-update"
+                        v-model="updatePreferences.autoRestartAfterUpdate"
                         @update:model-value="saveUpdatePreferences"
                     />
                 </template>

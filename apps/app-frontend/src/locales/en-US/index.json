@@ -10316,6 +10316,12 @@
   "app.settings.updates.auto-check-description": {
     "message": "Check for updates every time QueAN starts, and show a notification as soon as an update is found."
   },
+  "app.settings.updates.auto-restart": {
+    "message": "Restart automatically after updating"
+  },
+  "app.settings.updates.auto-restart-description": {
+    "message": "Once an update has finished downloading, install it and restart QueAN automatically."
+  },
   "app.settings.updates.pause": {
     "message": "Pause updates"
   },

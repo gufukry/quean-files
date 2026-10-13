@@ -30,6 +30,25 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
+        id: 'launcher-1.0.2',
+        version: '1.0.2',
+        publishedAt: '2026-10-13',
+        title: {
+            'en-US': 'QueAN Launcher 1.0.2',
+            'zh-CN': 'QueAN Launcher 1.0.2',
+        },
+        changes: {
+            added: [
+                {
+                    'en-US':
+                        'Update behavior now includes “restart automatically after updating”.',
+                    'zh-CN':
+                        '更新行为新增「更新完成后自动重启」：更新下载完成后自动安装并重启启动器。',
+                },
+            ],
+        },
+    },
+    {
         id: 'launcher-1.0.1',
         version: '1.0.1',
         publishedAt: '2026-10-13',

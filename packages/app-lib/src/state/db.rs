@@ -269,6 +269,7 @@ async fn resolve_update_channel(
 pub struct UpdateChannelState {
     pub active_channel: Option<String>,
     pub auto_check_updates: Option<bool>,
+    pub auto_restart_after_update: Option<bool>,
     pub updates_paused: Option<bool>,
 }
 
