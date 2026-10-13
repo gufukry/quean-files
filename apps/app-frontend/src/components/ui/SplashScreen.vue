@@ -117,7 +117,7 @@ loading_listener(async (e) => {
     height: 100vh;
     width: 100vw;
     background:
-        linear-gradient(180deg, rgba(255, 77, 157, 0.24) 0%, rgba(48, 16, 40, 0.56) 97.29%),
+        linear-gradient(180deg, rgba(56, 189, 248, 0.24) 0%, rgba(12, 22, 40, 0.56) 97.29%),
         linear-gradient(0deg, rgba(22, 18, 28, 0.68), rgba(22, 18, 28, 0.68));
     z-index: 9997;
 }
