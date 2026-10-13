@@ -10862,6 +10862,9 @@
   "app.update-popup.body.download-complete": {
     "message": "QueAN Launcher v{version} has finished downloading. Reload to update now, or automatically when you close QueAN Launcher."
   },
+  "app.update-popup.body.downloading": {
+    "message": "QueAN Launcher v{version} is available and downloading now."
+  },
   "app.update-popup.body.metered": {
     "message": "QueAN Launcher v{version} is available now! Since you're on a metered network, we didn't automatically download it."
   },

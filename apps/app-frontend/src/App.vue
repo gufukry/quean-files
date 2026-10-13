@@ -2517,6 +2517,10 @@ const updatePopupMessages = defineMessages({
         id: 'app.update-popup.body.metered',
         defaultMessage: `QueAN Launcher v{version} is available now! Since you're on a metered network, we didn't automatically download it.`,
     },
+    downloadingBody: {
+        id: 'app.update-popup.body.downloading',
+        defaultMessage: `QueAN Launcher v{version} is available and downloading now.`,
+    },
     downloadedBody: {
         id: 'app.update-popup.body.download-complete',
         defaultMessage: `QueAN Launcher v{version} has finished downloading. Reload to update now, or automatically when you close QueAN Launcher.`,
@@ -2676,6 +2680,23 @@ async function performUpdateCheck() {
 
     if (!metered.value) {
         console.log('Starting download of update')
+        markAppUpdateActionable(update.version)
+        addPopupNotification({
+            title: formatMessage(updatePopupMessages.updateAvailable),
+            text: formatMessage(updatePopupMessages.downloadingBody, {
+                version: update.version,
+            }),
+            type: 'info',
+            autoCloseMs: null,
+            buttons: [
+                {
+                    label: formatMessage(updatePopupMessages.changelog),
+                    action: () => openAppUpdateChangelog(),
+                    keepOpen: true,
+                },
+            ],
+        })
+        markAppUpdatePopupShown(update.version)
         downloadUpdate(update)
     } else {
         console.log(`Metered connection detected, not auto-downloading update.`)

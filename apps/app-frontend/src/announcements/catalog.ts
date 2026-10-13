@@ -30,6 +30,24 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
+        id: 'launcher-1.0.3',
+        version: '1.0.3',
+        publishedAt: '2026-10-13',
+        title: {
+            'en-US': 'QueAN Launcher 1.0.3',
+            'zh-CN': 'QueAN Launcher 1.0.3',
+        },
+        changes: {
+            changed: [
+                {
+                    'en-US':
+                        'A notification pops up when a new version is detected instead of updating silently.',
+                    'zh-CN': '检测到新版本时弹出通知提示，不再静默更新。',
+                },
+            ],
+        },
+    },
+    {
         id: 'launcher-1.0.2',
         version: '1.0.2',
         publishedAt: '2026-10-13',

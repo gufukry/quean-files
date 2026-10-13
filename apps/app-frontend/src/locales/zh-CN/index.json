@@ -10718,6 +10718,9 @@
   "app.update-popup.body.download-complete": {
     "message": "QueAN Launcher v{version} 更新已下载完成！立即重启更新，或退出时自动安装。"
   },
+  "app.update-popup.body.downloading": {
+    "message": "发现新版本 QueAN Launcher v{version}，正在自动下载更新。"
+  },
   "app.update-popup.body.metered": {
     "message": "QueAN Launcher v{version} 现已发布！由于你正在使用按流量计费的网络，该更新未自动下载。"
   },
