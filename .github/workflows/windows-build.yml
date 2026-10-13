@@ -93,3 +93,33 @@ jobs:
           name: quean-release
           path: release/**
           if-no-files-found: error
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: quean-release
+          path: art
+
+      - name: Locate files
+        id: loc
+        run: |
+          if [ -d art/release ]; then echo "dir=art/release" >> "$GITHUB_OUTPUT"; else echo "dir=art" >> "$GITHUB_OUTPUT"; fi
+          ls -laR art | head -60
+
+      - name: Install sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+
+      - name: Upload to update server
+        env:
+          SSHPASS: ${{ secrets.SERVER_PASSWORD }}
+          HOST: "${{ vars.SERVER_HOST || '103.242.2.127' }}"
+          SSHDEST: "${{ vars.SERVER_UPDATE_DIR || '/www/wwwroot/qafaka.cc.cd/quean-update' }}"
+        run: |
+          set -e
+          SRC="${{ steps.loc.outputs.dir }}"
+          sshpass -e scp -o StrictHostKeyChecking=no -r "$SRC"/. "root@$HOST:$SSHDEST/"
+          sshpass -e ssh -o StrictHostKeyChecking=no "root@$HOST" "chown -R www:www $SSHDEST && find $SSHDEST -type f -exec chmod 644 {} + && echo '--- $SSHDEST ---' && ls -la $SSHDEST"
