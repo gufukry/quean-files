@@ -8,7 +8,7 @@ pub const DEEP_LINK_SCHEME: &str = "axolotl";
 const MAX_DATA_DIR_SUFFIX_LEN: usize = 32;
 
 pub fn user_agent(version: &str, os: &str) -> String {
-    format!("garbage-human-studio/axolotl/{version} ({os})")
+    format!("QueAN/{version} ({os})")
 }
 
 /// Name of the directory the launcher keeps its settings, databases and logs in.

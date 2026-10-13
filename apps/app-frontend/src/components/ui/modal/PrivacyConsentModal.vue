@@ -141,7 +141,7 @@ defineExpose({ show })
                 <Button
                     type="quiet"
                     :disabled="saving"
-                    @click="openUrl('https://axlmc.org/privacy')"
+                    @click="openUrl('https://qafaka.cc.cd/')"
                     ><ExternalIcon />
                     {{ formatMessage(messages.privacyPolicy) }}
                 </Button>

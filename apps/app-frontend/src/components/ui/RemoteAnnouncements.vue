@@ -47,7 +47,7 @@ const messages = defineMessages({
     previewContent: {
         id: 'app.remote-announcements.preview-content',
         defaultMessage:
-            '## Announcement preview\n\nThis is **sample content**, not a published announcement.\n\n- Supports headings, lists, and links\n- Close buttons are always available\n\n> Previewing does not change real announcement read status.\n\n| Type | Display |\n| --- | --- |\n| Modal | Full Markdown content |\n| Popup | Summary, then full content |\n\n[Visit the website](https://axlmc.org)',
+            '## Announcement preview\n\nThis is **sample content**, not a published announcement.\n\n- Supports headings, lists, and links\n- Close buttons are always available\n\n> Previewing does not change real announcement read status.\n\n| Type | Display |\n| --- | --- |\n| Modal | Full Markdown content |\n| Popup | Summary, then full content |\n\n[Visit the website](https://qafaka.cc.cd/)',
     },
     previewAction: {
         id: 'app.remote-announcements.preview-action',
@@ -227,7 +227,7 @@ async function refresh() {
             const [version, channel] = await Promise.all([getVersion(), getUpdateChannel()])
             endpoint = new URL(
                 import.meta.env.VITE_AXO_ANNOUNCEMENTS_URL ||
-                    'https://admin.axlmc.org/api/public/announcements',
+                    'https://qafaka.cc.cd/quean-update/announcements',
             )
             endpoint.searchParams.set('version', version)
             endpoint.searchParams.set('channel', channel === 'release' ? 'stable' : 'beta')
@@ -286,7 +286,7 @@ function preview(type: RemoteAnnouncement['type'], withAction = false) {
         ends_at: null,
         published_at: now,
         action_label: withAction ? formatMessage(messages.previewAction) : null,
-        action_url: withAction ? 'https://axlmc.org' : null,
+        action_url: withAction ? 'https://qafaka.cc.cd/' : null,
     }
     read.clear()
     queuedThisSession.clear()

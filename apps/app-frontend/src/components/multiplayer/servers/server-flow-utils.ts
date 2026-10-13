@@ -78,10 +78,10 @@ let userAgentPromise: Promise<string> | null = null
 function launcherUserAgent(): Promise<string> {
     userAgentPromise ??= Promise.all([getVersion(), osType()]).then(
         ([version, platform]) =>
-            `garbage-human-studio/axolotl/${version} (${platform}; +https://www.ghs.red)`,
+            `QueAN/${version} (${platform}; +https://qafaka.cc.cd)`,
     )
     userAgentPromise = userAgentPromise.catch(
-        () => 'garbage-human-studio/axolotl (+https://www.ghs.red)',
+        () => 'QueAN (+https://qafaka.cc.cd)',
     )
     return userAgentPromise
 }

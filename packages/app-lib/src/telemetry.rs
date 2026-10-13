@@ -11,7 +11,7 @@ use uuid::Uuid;
 
 use crate::State;
 
-const ENDPOINT: &str = "https://telemetry.axlmc.org/v1/batch";
+const ENDPOINT: &str = "https://qafaka.cc.cd/quean-telemetry/v1/batch";
 const MAX_OUTBOX_EVENTS: i64 = 100;
 const MAX_OUTBOX_BYTES: i64 = 2 * 1024 * 1024;
 const MAX_EVENT_AGE_SECONDS: i64 = 7 * 24 * 60 * 60;
