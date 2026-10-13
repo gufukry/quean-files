@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
     CheckIcon,
-    ChevronDownIcon,
     CopyIcon,
     ExternalIcon,
     GithubIcon,
@@ -11,7 +10,7 @@ import {
     ScaleIcon,
     UsersIcon,
 } from '@modrinth/assets'
-import { Avatar, Button, defineMessages, useVIntl } from '@modrinth/ui'
+import { Button, defineMessages, useVIntl } from '@modrinth/ui'
 import { getVersion } from '@tauri-apps/api/app'
 import {
     inject,
@@ -23,20 +22,16 @@ import {
 } from 'vue'
 
 import AfdianIcon from '@/assets/external/afdian.png'
-import QqIcon from '@/assets/external/qq.svg?component'
-import EasterEggContributorsModal from '@/components/ui/easteregg/EasterEggContributorsModal.vue'
 import EasterEggGameModal from '@/components/ui/easteregg/EasterEggGameModal.vue'
 import { QueANBrandConfig } from '@/config'
-import { contributors, type TeamMember, teamMembers } from '@/data/about'
+import { type TeamMember, teamMembers } from '@/data/about'
 
 import { type AboutMemberExperience, getAboutMemberExperience } from './about-member-experiences'
-import QqChannelIcon from './QqChannelIcon.vue'
 import SettingsSection from './SettingsSection.vue'
 import TeamMemberAvatar from './TeamMemberAvatar.vue'
 
 const { formatMessage } = useVIntl()
 const version = ref('')
-const copied = ref(false)
 const experienceHost = ref<HTMLElement>()
 const activeMemberExperience = shallowRef<AboutMemberExperience>()
 // A finished experience may be replaced by another one; a running one may not.
@@ -60,14 +55,6 @@ onMounted(() => {
             // keep empty version string; do not fail the settings category
         })
 })
-
-async function copyQqGroupNumber() {
-    await navigator.clipboard.writeText(QueANBrandConfig.qqGroupNumber)
-    copied.value = true
-    setTimeout(() => {
-        copied.value = false
-    }, 3000)
-}
 
 function cancelMemberLongPress() {
     if (longPressTimer) window.clearTimeout(longPressTimer)
@@ -125,24 +112,9 @@ function closeMemberExperience() {
 }
 
 const gameModal = ref<InstanceType<typeof EasterEggGameModal> | null>(null)
-const contributorsModal = ref<InstanceType<typeof EasterEggContributorsModal> | null>(null)
 
 let typedBuffer = ''
 const secretCodes = ['cyf112233', 'cxkcxkckx']
-
-const konamiSequence = [
-    'ArrowUp',
-    'ArrowUp',
-    'ArrowDown',
-    'ArrowDown',
-    'ArrowLeft',
-    'ArrowRight',
-    'ArrowLeft',
-    'ArrowRight',
-    'KeyB',
-    'KeyA',
-]
-let konamiIndex = 0
 
 function handleEasterEggKeydown(event: KeyboardEvent) {
     typedBuffer = (typedBuffer + event.key).toLowerCase()
@@ -155,21 +127,6 @@ function handleEasterEggKeydown(event: KeyboardEvent) {
         gameModal.value?.show()
         return
     }
-
-    const expected = konamiSequence[konamiIndex]
-    if (event.code === expected) {
-        konamiIndex++
-        if (konamiIndex === konamiSequence.length) {
-            konamiIndex = 0
-            contributorsModal.value?.show()
-        }
-    } else {
-        konamiIndex = event.code === konamiSequence[0] ? 1 : 0
-    }
-}
-
-function onEasterEggOpenGame() {
-    gameModal.value?.show()
 }
 
 document.addEventListener('keydown', handleEasterEggKeydown)
@@ -214,22 +171,6 @@ const messages = defineMessages({
         id: 'app.settings.about.report-issue',
         defaultMessage: 'Issues & feedback',
     },
-    qqGroup: {
-        id: 'app.settings.about.qq-group',
-        defaultMessage: 'Player QQ group',
-    },
-    qqChannel: {
-        id: 'app.settings.about.qq-channel',
-        defaultMessage: 'QQ channel',
-    },
-    copyQqGroup: {
-        id: 'app.settings.about.copy-qq-group',
-        defaultMessage: 'Copy group number',
-    },
-    copiedQqGroup: {
-        id: 'app.settings.about.copied-qq-group',
-        defaultMessage: 'Group number copied',
-    },
     afdian: {
         id: 'app.settings.about.afdian',
         defaultMessage: 'Support on Afdian',
@@ -268,14 +209,6 @@ const messages = defineMessages({
         id: 'app.settings.about.third-party-licenses',
         defaultMessage: 'Third-party licenses',
     },
-    contributors: {
-        id: 'app.settings.about.contributors',
-        defaultMessage: 'Contributors',
-    },
-    contributorsCount: {
-        id: 'app.settings.about.contributors-count',
-        defaultMessage: '{count, plural, one {# contributor} other {# contributors}}',
-    },
 })
 
 const projectLinks = [
@@ -293,11 +226,6 @@ const projectLinks = [
         href: QueANBrandConfig.supportUrl,
         label: messages.reportIssue,
         icon: IssuesIcon,
-    },
-    {
-        href: QueANBrandConfig.qqChannelUrl,
-        label: messages.qqChannel,
-        icon: QqChannelIcon,
     },
 ]
 </script>
@@ -420,43 +348,6 @@ const projectLinks = [
                     <ExternalIcon class="size-5 shrink-0 text-[var(--color-text-tertiary)]" />
                 </a>
 
-                <button
-                    type="button"
-                    :disabled="copied"
-                    :aria-label="
-                        copied
-                            ? formatMessage(messages.copiedQqGroup)
-                            : formatMessage(messages.copyQqGroup)
-                    "
-                    class="flex w-full min-w-0 items-center gap-3 rounded-xl bg-surface-4 p-4 text-left transition-colors hover:bg-surface-5 disabled:cursor-default"
-                    @click="copyQqGroupNumber"
-                >
-                    <span
-                        class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-[var(--color-text-primary)]"
-                    >
-                        <QqIcon class="size-6" />
-                    </span>
-                    <span class="min-w-0 flex-1">
-                        <span class="block font-semibold text-[var(--color-text-primary)]">
-                            {{ formatMessage(messages.qqGroup) }}
-                        </span>
-                        <span class="block text-sm text-[var(--color-text-tertiary)]">
-                            {{ QueANBrandConfig.qqGroupNumber }}
-                        </span>
-                    </span>
-                    <span class="shrink-0" aria-live="polite">
-                        <CheckIcon v-if="copied" class="size-5 text-green" />
-                        <CopyIcon v-else class="size-5 text-[var(--color-text-tertiary)]" />
-                        <span class="sr-only">
-                            {{
-                                copied
-                                    ? formatMessage(messages.copiedQqGroup)
-                                    : formatMessage(messages.copyQqGroup)
-                            }}
-                        </span>
-                    </span>
-                </button>
-
                 <a
                     :href="QueANBrandConfig.sponsorUrl"
                     target="_blank"
@@ -538,45 +429,6 @@ const projectLinks = [
             </div>
         </SettingsSection>
 
-        <details class="group pt-4 about-settings-details">
-            <summary
-                class="flex cursor-pointer list-none items-center gap-2 text-base font-semibold text-[var(--color-text-primary)] [&::-webkit-details-marker]:hidden"
-            >
-                <UsersIcon class="size-5 text-[var(--color-text-tertiary)]" />
-                <span>{{ formatMessage(messages.contributors) }}</span>
-                <span
-                    class="rounded-full bg-surface-4 px-2 py-0.5 text-xs text-[var(--color-text-tertiary)]"
-                >
-                    {{ formatMessage(messages.contributorsCount, { count: contributors.length }) }}
-                </span>
-                <ChevronDownIcon
-                    class="ml-auto size-5 text-[var(--color-text-tertiary)] transition-transform group-open:rotate-180"
-                />
-            </summary>
-            <div class="mt-3 flex flex-wrap gap-2">
-                <a
-                    v-for="contributor in contributors"
-                    :key="contributor.name"
-                    :href="contributor.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex min-w-0 items-center gap-1.5 rounded-full bg-surface-4 py-1 pl-1 pr-2.5 transition-colors hover:bg-surface-5"
-                >
-                    <Avatar
-                        :src="contributor.avatarUrl"
-                        :alt="contributor.name"
-                        size="1.5rem"
-                        circle
-                        no-shadow
-                        loading="lazy"
-                    />
-                    <span class="truncate text-sm text-[var(--color-text-default)]">{{
-                        contributor.name
-                    }}</span>
-                </a>
-            </div>
-        </details>
-
         <div id="settings-target-about-replay-tour" tabindex="-1" class="flex flex-wrap gap-2">
             <Button type="base" @click="replayOnboarding?.('main')">
                 {{ formatMessage(messages.replayOnboarding) }}
@@ -585,7 +437,6 @@ const projectLinks = [
     </div>
 
     <EasterEggGameModal ref="gameModal" />
-    <EasterEggContributorsModal ref="contributorsModal" @open-game="onEasterEggOpenGame" />
 </template>
 
 <style scoped>
