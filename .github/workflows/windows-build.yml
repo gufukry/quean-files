@@ -61,6 +61,16 @@ jobs:
           [IO.File]::WriteAllText((Resolve-Path $conf), $json)
           Select-String -Path $conf -Pattern pubkey
 
+      - name: Check signing key
+        if: always()
+        shell: pwsh
+        env:
+          KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '## 签名密钥检查'
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ('- 长度: ' + $env:KEY.Length)
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ('- 为空: ' + [string]::IsNullOrWhiteSpace($env:KEY))
+
       - name: Build
         shell: pwsh
         env:
@@ -86,6 +96,21 @@ jobs:
           name: build-log
           path: build-log.txt
           if-no-files-found: ignore
+
+      - name: Inspect bundle output
+        if: always()
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '## Tauri bundle 目录（原始产物）'
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ''
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
+          foreach ($d in @('target/release/bundle','apps/app/target/release/bundle')) {
+            if (Test-Path $d) {
+              Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ('[' + $d + ']')
+              Get-ChildItem $d -Recurse -File | ForEach-Object { '{0,12}  {1}' -f $_.Length, $_.FullName } | Add-Content -Path $env:GITHUB_STEP_SUMMARY
+            }
+          }
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
 
       - name: List release contents
         shell: pwsh
