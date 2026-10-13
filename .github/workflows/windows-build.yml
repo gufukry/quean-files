@@ -87,6 +87,15 @@ jobs:
           path: build-log.txt
           if-no-files-found: ignore
 
+      - name: List release contents
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '## release/ 产物清单'
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ''
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
+          Get-ChildItem release -Recurse -File | ForEach-Object { '{0,12}  {1}' -f $_.Length, $_.Name } | Add-Content -Path $env:GITHUB_STEP_SUMMARY
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value '```'
+
       - name: Upload release bundle
         uses: actions/upload-artifact@v4
         with:
