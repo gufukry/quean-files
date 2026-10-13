@@ -13,8 +13,10 @@ import {
 import { Button, defineMessages, useVIntl } from '@modrinth/ui'
 import { getVersion } from '@tauri-apps/api/app'
 import {
+    defineAsyncComponent,
     inject,
     nextTick,
+    onErrorCaptured,
     onMounted,
     onScopeDispose,
     ref,
@@ -29,6 +31,28 @@ import { type TeamMember, teamMembers } from '@/data/about'
 import { type AboutMemberExperience, getAboutMemberExperience } from './about-member-experiences'
 import SettingsSection from './SettingsSection.vue'
 import TeamMemberAvatar from './TeamMemberAvatar.vue'
+
+// Load the scene independently so the About content can render immediately.
+const AboutScene = defineAsyncComponent({
+    loader: () => import('../AboutScene.vue'),
+    suspensible: false,
+    onError(error, retry, fail) {
+        // one retry, then leave the scene slot empty instead of tearing down Settings
+        if ((error as { __aboutSceneRetried?: boolean }).__aboutSceneRetried) {
+            fail()
+            return
+        }
+        ;(error as { __aboutSceneRetried?: boolean }).__aboutSceneRetried = true
+        retry()
+    },
+})
+const aboutSceneFailed = ref(false)
+
+// Keep a failing 3D scene from bubbling into Settings Suspense / the shell.
+onErrorCaptured(() => {
+    aboutSceneFailed.value = true
+    return false
+})
 
 const { formatMessage } = useVIntl()
 const version = ref('')
@@ -245,6 +269,7 @@ const projectLinks = [
                         -webkit-mask-image: linear-gradient(to bottom, black 97%, transparent 100%);
                     "
                 >
+                    <AboutScene v-if="!aboutSceneFailed" />
                     <component
                         :is="activeMemberExperience?.component"
                         v-if="activeMemberExperience"
