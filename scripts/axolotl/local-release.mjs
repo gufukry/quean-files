@@ -67,7 +67,8 @@ if (!skipBuild) {
 				+ '        先运行: pnpm --filter @modrinth/app tauri signer generate -w C:/Users/<你>/.tauri/quean.key',
 		)
 	}
-	run('pnpm', ['--filter', '@modrinth/app', 'build'])
+	// 使用自定义安装器（tauri-modern.conf.json）：NSIS 模板 + QueAN 侧栏/顶部图 + 安装界面
+	run('pnpm', ['--filter', '@modrinth/app', 'tauri', 'build', '--config', 'tauri-release.conf.json', '--config', 'tauri-modern.conf.json'])
 }
 
 // 3. 定位构建产物（Cargo workspace 的 target 可能在根目录或 apps/app 下）
