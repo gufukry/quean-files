@@ -52,6 +52,12 @@ export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
                         '第三方（Yggdrasil）账号的「添加皮肤」按钮改为打开服务商网站更换皮肤。',
                 },
             ],
+            fixed: [
+                {
+                    'en-US': 'Announcements now load correctly from the update server.',
+                    'zh-CN': '修复公告无法从更新服务器加载（公告功能可用）。',
+                },
+            ],
         },
     },
     {
