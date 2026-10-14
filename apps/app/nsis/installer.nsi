@@ -1025,8 +1025,14 @@ Section WebView2
   Push 12
   Call ReportInstallerProgress
   ; Check if Webview2 is already installed and skip this section
+  ; SetRegView 64 is required here: this is a 32-bit installer, so without it
+  ; the WOW6432Node path below is redirected again to
+  ; SOFTWARE\WOW6432Node\WOW6432Node and never found, causing a needless
+  ; WebView2 download even when the runtime is already installed.
   ${If} ${RunningX64}
+    SetRegView 64
     ReadRegStr $4 HKLM "SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\${WEBVIEW2APPGUID}" "pv"
+    SetRegView 32
   ${Else}
     ReadRegStr $4 HKLM "SOFTWARE\Microsoft\EdgeUpdate\Clients\${WEBVIEW2APPGUID}" "pv"
   ${EndIf}

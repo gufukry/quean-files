@@ -30,6 +30,25 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
+        id: 'launcher-1.0.4',
+        version: '1.0.4',
+        publishedAt: '2026-10-14',
+        title: {
+            'en-US': 'QueAN Launcher 1.0.4',
+            'zh-CN': 'QueAN Launcher 1.0.4',
+        },
+        changes: {
+            fixed: [
+                {
+                    'en-US':
+                        'The Windows installer no longer misdetects WebView2 as missing and re-downloads it; it now skips when the runtime is already installed.',
+                    'zh-CN':
+                        '修复 Windows 安装向导误判 WebView2 未安装而重复下载的问题：已安装时会正确跳过。',
+                },
+            ],
+        },
+    },
+    {
         id: 'launcher-1.0.3',
         version: '1.0.3',
         publishedAt: '2026-10-13',
