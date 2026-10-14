@@ -9,6 +9,7 @@ import {
 } from '@modrinth/ui'
 import { renderString } from '@modrinth/utils'
 import { getVersion } from '@tauri-apps/api/app'
+import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
 import { openUrl } from '@tauri-apps/plugin-opener'
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 
@@ -235,7 +236,7 @@ async function refresh() {
         }
         if (disposed || abort.signal.aborted) return
         loadCache()
-        const response = await fetch(endpoint, { signal: abort.signal, credentials: 'omit' })
+        const response = await tauriFetch(endpoint.toString(), { signal: abort.signal })
         if (!response.ok) return
         const text = await response.text()
         if (text.length > 4500000) return

@@ -30,6 +30,24 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
+        id: 'launcher-1.0.7',
+        version: '1.0.7',
+        publishedAt: '2026-10-14',
+        title: {
+            'en-US': 'QueAN Launcher 1.0.7',
+            'zh-CN': 'QueAN Launcher 1.0.7',
+        },
+        changes: {
+            fixed: [
+                {
+                    'en-US':
+                        'Announcements now load reliably (the request no longer goes through the webview).',
+                    'zh-CN': '再次修复公告加载（改用不受 CSP／CORS 限制的请求方式）。',
+                },
+            ],
+        },
+    },
+    {
         id: 'launcher-1.0.6',
         version: '1.0.6',
         publishedAt: '2026-10-14',
