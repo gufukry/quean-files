@@ -30,24 +30,6 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
-        id: 'launcher-1.0.4',
-        version: '1.0.4',
-        publishedAt: '2026-10-14',
-        title: {
-            'en-US': 'QueAN Launcher 1.0.4',
-            'zh-CN': 'QueAN Launcher 1.0.4',
-        },
-        changes: {
-            changed: [
-                {
-                    'en-US':
-                        'The Windows installer no longer downloads WebView2 during setup, so installation is much faster.',
-                    'zh-CN': 'Windows 安装向导不再在安装时联网下载 WebView2，安装更快。',
-                },
-            ],
-        },
-    },
-    {
         id: 'launcher-1.0.3',
         version: '1.0.3',
         publishedAt: '2026-10-13',
