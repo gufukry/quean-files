@@ -61,10 +61,6 @@ const messages = defineMessages({
         id: 'app.skins.add-button',
         defaultMessage: 'Add skin',
     },
-    externalSkinButton: {
-        id: 'app.skins.add-button.external',
-        defaultMessage: 'Open provider site',
-    },
     dragAndDropSubtitle: {
         id: 'app.skins.add-button.drag-and-drop',
         defaultMessage: 'Drag and drop',
@@ -468,14 +464,8 @@ defineExpose({ getAddSkinButtonElement })
                             <template #icon>
                                 <PlusIcon class="size-8" />
                             </template>
-                            {{
-                                formatMessage(
-                                    addSkinExternal
-                                        ? messages.externalSkinButton
-                                        : messages.addSkinButton,
-                                )
-                            }}
-                            <template v-if="!addSkinExternal" #subtitle>{{
+                            {{ formatMessage(messages.addSkinButton) }}
+                            <template #subtitle>{{
                                 formatMessage(messages.dragAndDropSubtitle)
                             }}</template>
                         </SkinLikeTextButton>

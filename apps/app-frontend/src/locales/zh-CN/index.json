@@ -10313,9 +10313,6 @@
   "app.skins.add-button": {
     "message": "添加皮肤"
   },
-  "app.skins.add-button.external": {
-    "message": "打开服务商网站更换皮肤"
-  },
   "app.skins.add-button.drag-and-drop": {
     "message": "拖放"
   },
