@@ -10028,7 +10028,13 @@ async fn request_json<T: DeserializeOwned>(
 ) -> crate::Result<T> {
     let key = api_key();
     let state = State::get().await?;
-    let source_mode = if method != Method::GET
+    let source_mode = if key.is_none() {
+        // No official API key: the official endpoint cannot authenticate, so
+        // fall back to the key-free mirror (mod.mcimirror.top) for every
+        // method. Without this, POST /v1/mods (modpack resolution) is forced
+        // official-only and always fails.
+        DownloadSourceMode::MirrorPreferred
+    } else if method != Method::GET
         || mirror_policy == MirrorPolicy::OfficialOnly
     {
         DownloadSourceMode::OfficialOnly

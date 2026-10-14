@@ -30,6 +30,25 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
+        id: 'launcher-1.0.5',
+        version: '1.0.5',
+        publishedAt: '2026-10-14',
+        title: {
+            'en-US': 'QueAN Launcher 1.0.5',
+            'zh-CN': 'QueAN Launcher 1.0.5',
+        },
+        changes: {
+            fixed: [
+                {
+                    'en-US':
+                        'CurseForge modpack resolution now also routes non-GET API calls through the key-free mirror, so CurseForge modpacks import correctly.',
+                    'zh-CN':
+                        '修复 CurseForge 整合包解析：非 GET 请求也走免 Key 镜像，CurseForge 整合包可正常导入。',
+                },
+            ],
+        },
+    },
+    {
         id: 'launcher-1.0.4',
         version: '1.0.4',
         publishedAt: '2026-10-14',
