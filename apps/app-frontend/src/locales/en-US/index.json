@@ -10454,6 +10454,9 @@
   "app.skins.add-button": {
     "message": "Add skin"
   },
+  "app.skins.add-button.external": {
+    "message": "Open provider site"
+  },
   "app.skins.add-button.drag-and-drop": {
     "message": "Drag and drop"
   },

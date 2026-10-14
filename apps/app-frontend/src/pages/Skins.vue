@@ -25,6 +25,7 @@ import {
 import { arrayBufferToBase64 } from '@modrinth/utils'
 import { useQuery } from '@tanstack/vue-query'
 import { invoke } from '@tauri-apps/api/core'
+import { openUrl } from '@tauri-apps/plugin-opener'
 import type { DragDropEvent } from '@tauri-apps/api/webview'
 import { getCurrentWebview } from '@tauri-apps/api/webview'
 import { computedAsync } from '@vueuse/core'
@@ -932,6 +933,32 @@ function openAddSkinFileBrowser() {
     addSkinFileInput.value?.click()
 }
 
+function thirdPartyProviderSkinUrl(): string {
+    const account = currentUser.value as
+        | { yggdrasil?: { api_root?: string } }
+        | undefined
+    const apiRoot = account?.yggdrasil?.api_root
+    if (apiRoot) {
+        try {
+            const origin = new URL(apiRoot).origin
+            return origin.toLowerCase().includes('littleskin')
+                ? `${origin}/user/closet`
+                : origin
+        } catch {
+            // Fall through to the LittleSkin default below.
+        }
+    }
+    return 'https://littleskin.cn/user/closet'
+}
+
+function handleAddSkin() {
+    if (currentAccountType.value === 'yggdrasil') {
+        void openUrl(thirdPartyProviderSkinUrl())
+        return
+    }
+    openAddSkinFileBrowser()
+}
+
 async function onAddSkinFileInputChange(e: Event) {
     if (isSkinManagementReadOnly.value) return
 
@@ -1283,11 +1310,12 @@ await refreshSelectedAccount()
                         :is-skin-active="isSkinActive"
                         :is-add-skin-button-drag-active="isAddSkinButtonDragActive"
                         :read-only="isSkinManagementReadOnly"
+                        :add-skin-external="currentAccountType === 'yggdrasil'"
                         @select="changeSkin"
                         @edit="(skin, event) => editSkinModal?.show(event, skin)"
                         @delete="confirmDeleteSkin"
                         @reorder-saved-skins="reorderSavedSkins"
-                        @add-skin="openAddSkinFileBrowser"
+                        @add-skin="handleAddSkin"
                         @add-skin-dragenter="onAddSkinDragOver"
                         @add-skin-dragover="onAddSkinDragOver"
                         @add-skin-dragleave="onAddSkinDragLeave"

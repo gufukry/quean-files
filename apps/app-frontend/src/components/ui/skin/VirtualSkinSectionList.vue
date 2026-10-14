@@ -61,6 +61,10 @@ const messages = defineMessages({
         id: 'app.skins.add-button',
         defaultMessage: 'Add skin',
     },
+    externalSkinButton: {
+        id: 'app.skins.add-button.external',
+        defaultMessage: 'Open provider site',
+    },
     dragAndDropSubtitle: {
         id: 'app.skins.add-button.drag-and-drop',
         defaultMessage: 'Drag and drop',
@@ -83,6 +87,7 @@ const props = defineProps<{
     isSkinActive: (skin: Skin) => boolean
     isAddSkinButtonDragActive: boolean
     readOnly?: boolean
+    addSkinExternal?: boolean
     activeTab?: 'saved' | 'default'
 }>()
 
@@ -452,8 +457,8 @@ defineExpose({ getAddSkinButtonElement })
                             ref="addSkinButton"
                             class="aspect-[31/40] w-full min-w-0 box-border rounded-[20px]"
                             dropzone
-                            :disabled="readOnly"
-                            :drag-active="!readOnly && isAddSkinButtonDragActive"
+                            :disabled="addSkinExternal ? false : readOnly"
+                            :drag-active="!readOnly && !addSkinExternal && isAddSkinButtonDragActive"
                             @click="emit('add-skin')"
                             @dragenter="emit('add-skin-dragenter', $event)"
                             @dragover="emit('add-skin-dragover', $event)"
@@ -463,8 +468,14 @@ defineExpose({ getAddSkinButtonElement })
                             <template #icon>
                                 <PlusIcon class="size-8" />
                             </template>
-                            {{ formatMessage(messages.addSkinButton) }}
-                            <template #subtitle>{{
+                            {{
+                                formatMessage(
+                                    addSkinExternal
+                                        ? messages.externalSkinButton
+                                        : messages.addSkinButton,
+                                )
+                            }}
+                            <template v-if="!addSkinExternal" #subtitle>{{
                                 formatMessage(messages.dragAndDropSubtitle)
                             }}</template>
                         </SkinLikeTextButton>
