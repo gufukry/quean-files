@@ -41,6 +41,11 @@ export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
             fixed: [
                 {
                     'en-US':
+                        'CurseForge modpacks and mods could not be resolved; CurseForge API access now works again.',
+                    'zh-CN': '修复 CurseForge 整合包／模组无法解析安装的问题。',
+                },
+                {
+                    'en-US':
                         'The Windows installer no longer misdetects WebView2 as missing and re-downloads it; it now skips when the runtime is already installed.',
                     'zh-CN':
                         '修复 Windows 安装向导误判 WebView2 未安装而重复下载的问题：已安装时会正确跳过。',
