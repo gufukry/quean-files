@@ -62,6 +62,9 @@
 					"url": "https://update.axlmc.org/*"
 				},
 				{
+					"url": "https://qafaka.cc.cd/*"
+				},
+				{
 					"url": "http://localhost:8000/*"
 				},
 				{
