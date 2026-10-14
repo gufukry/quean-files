@@ -1,6 +1,7 @@
 use super::{
-    Credentials, MinecraftAccountType, MinecraftCharacterExpressionState,
-    MinecraftProfile, MinecraftSkin, MinecraftSkinVariant,
+    Credentials, MinecraftAccountType, MinecraftCape,
+    MinecraftCharacterExpressionState, MinecraftProfile, MinecraftSkin,
+    MinecraftSkinVariant,
 };
 use crate::ErrorKind;
 use crate::util::fetch::INSECURE_REQWEST_CLIENT;
@@ -139,6 +140,8 @@ struct TexturePayload {
 struct SessionTextures {
     #[serde(rename = "SKIN")]
     skin: Option<SessionTexture>,
+    #[serde(rename = "CAPE")]
+    cape: Option<SessionTexture>,
 }
 
 #[derive(Deserialize)]
@@ -425,11 +428,13 @@ pub async fn fetch_yggdrasil_profile(
             ))
             .as_error()
         })?;
-    let skin = profile
+    let textures = profile
         .properties
         .iter()
         .find(|property| property.name == "textures")
-        .and_then(|property| match decode_session_skin(profile.id, &property.value) {
+        .map(|property| property.value.as_str());
+    let skin = textures.and_then(|value| {
+        match decode_session_skin(profile.id, value) {
             Ok(skin) => skin,
             Err(error) => {
                 tracing::warn!(
@@ -438,13 +443,26 @@ pub async fn fetch_yggdrasil_profile(
                 );
                 None
             }
-        });
+        }
+    });
+    let cape = textures.and_then(|value| {
+        match decode_session_cape(profile.id, value) {
+            Ok(cape) => cape,
+            Err(error) => {
+                tracing::warn!(
+                    "Unable to decode the Yggdrasil cape for profile {}: {error}",
+                    profile.id
+                );
+                None
+            }
+        }
+    });
 
     Ok(Some(MinecraftProfile {
         id: profile.id,
         name: profile.name,
         skins: skin.into_iter().collect(),
-        capes: Vec::new(),
+        capes: cape.into_iter().collect(),
         fetch_time: Some(Instant::now()),
     }))
 }
@@ -482,6 +500,35 @@ fn decode_session_skin(
         texture_key: None,
         variant,
         name: None,
+    }))
+}
+
+fn decode_session_cape(
+    profile_id: Uuid,
+    encoded_textures: &str,
+) -> Result<Option<MinecraftCape>, String> {
+    let decoded = BASE64_STANDARD
+        .decode(encoded_textures)
+        .or_else(|_| BASE64_STANDARD_NO_PAD.decode(encoded_textures))
+        .map_err(|error| {
+            format!("invalid Base64 textures property: {error}")
+        })?;
+    let payload: TexturePayload = serde_json::from_slice(&decoded)
+        .map_err(|error| format!("invalid textures JSON: {error}"))?;
+    let Some(cape) = payload.textures.cape else {
+        return Ok(None);
+    };
+    let url = Url::parse(&cape.url)
+        .map_err(|error| format!("invalid cape texture URL: {error}"))?;
+    if !matches!(url.scheme(), "http" | "https") {
+        return Err("cape texture URL must use HTTP or HTTPS".to_string());
+    }
+
+    Ok(Some(MinecraftCape {
+        id: profile_id,
+        state: MinecraftCharacterExpressionState::Active,
+        url: Arc::new(url),
+        name: Arc::from("Cape"),
     }))
 }
 
