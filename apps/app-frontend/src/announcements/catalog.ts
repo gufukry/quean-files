@@ -30,24 +30,6 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
-        id: 'launcher-1.0.8',
-        version: '1.0.8',
-        publishedAt: '2026-10-14',
-        title: {
-            'en-US': 'QueAN Launcher 1.0.8',
-            'zh-CN': 'QueAN Launcher 1.0.8',
-        },
-        changes: {
-            fixed: [
-                {
-                    'en-US':
-                        'Capes are now shown for third-party (Yggdrasil) accounts.',
-                    'zh-CN': '第三方（Yggdrasil）账号现在会显示披风。',
-                },
-            ],
-        },
-    },
-    {
         id: 'launcher-1.0.7',
         version: '1.0.7',
         publishedAt: '2026-10-14',
@@ -61,6 +43,11 @@ export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
                     'en-US':
                         'Announcements now load reliably (the request no longer goes through the webview).',
                     'zh-CN': '再次修复公告加载（改用不受 CSP／CORS 限制的请求方式）。',
+                },
+                {
+                    'en-US':
+                        'Capes are now shown for third-party (Yggdrasil) accounts.',
+                    'zh-CN': '第三方（Yggdrasil）账号现在会显示披风。',
                 },
             ],
         },
