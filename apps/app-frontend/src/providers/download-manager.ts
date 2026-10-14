@@ -1,5 +1,7 @@
 import { createContext } from '@modrinth/ui'
-import { computed, type ComputedRef, type Ref, ref } from 'vue'
+import { getCurrentWindow } from '@tauri-apps/api/window'
+import { platform } from '@tauri-apps/plugin-os'
+import { computed, type ComputedRef, type Ref, ref, watch } from 'vue'
 
 import { setCurseForgeManualDownloads } from '@/helpers/curseforge-manual'
 import {
@@ -494,6 +496,72 @@ export function createDownloadManager(handleError: (error: unknown) => void): Do
     )
     const historyJobs = computed(() =>
         jobs.value.filter((job) => !isActiveInstallJobStatus(job.status)),
+    )
+
+    // Windows taskbar progress for active downloads.
+    let taskbarSupported: boolean | null = null
+    let lastTaskbarValue = -3
+
+    async function updateTaskbarProgress() {
+        if (taskbarSupported === null) {
+            taskbarSupported = (await platform()) === 'windows'
+        }
+        if (!taskbarSupported) return
+
+        const busy = activeJobs.value.length + legacyDownloads.value.length
+        if (busy === 0) {
+            if (lastTaskbarValue === -2) return
+            lastTaskbarValue = -2
+            await getCurrentWindow()
+                .setProgressBar({ status: 'none' })
+                .catch(() => {})
+            return
+        }
+
+        let downloaded = 0
+        let total = 0
+        for (const job of activeJobs.value) {
+            const jobTotal = job.summary.bytes_total ?? 0
+            if (jobTotal > 0) {
+                total += jobTotal
+                downloaded += Math.min(job.summary.bytes_downloaded ?? 0, jobTotal)
+            }
+        }
+        for (const bar of legacyDownloads.value) {
+            const barTotal = bar.total ?? 0
+            if (barTotal > 0) {
+                total += barTotal
+                downloaded += Math.min(bar.current ?? 0, barTotal)
+            }
+        }
+
+        if (total <= 0) {
+            if (lastTaskbarValue === -1) return
+            lastTaskbarValue = -1
+            await getCurrentWindow()
+                .setProgressBar({ status: 'indeterminate' })
+                .catch(() => {})
+            return
+        }
+
+        const percent = Math.min(100, Math.max(0, Math.round((downloaded / total) * 100)))
+        if (percent === lastTaskbarValue) return
+        lastTaskbarValue = percent
+        await getCurrentWindow()
+            .setProgressBar({ status: 'normal', progress: percent })
+            .catch(() => {})
+    }
+
+    watch(
+        () => [
+            activeJobs.value.length,
+            legacyDownloads.value.length,
+            ...activeJobs.value.map(
+                (job) => `${job.summary.bytes_downloaded}/${job.summary.bytes_total ?? ''}`,
+            ),
+            ...legacyDownloads.value.map((bar) => `${bar.current ?? ''}/${bar.total ?? ''}`),
+        ],
+        () => void updateTaskbarProgress(),
     )
 
     const syntheticIds = new Set<string>()

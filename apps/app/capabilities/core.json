@@ -27,6 +27,7 @@
 		"core:window:allow-set-cursor-grab",
 		"core:window:allow-set-cursor-visible",
 		"core:window:allow-start-dragging",
+		"core:window:allow-set-progress-bar",
 		"core:webview:allow-set-webview-zoom"
 	]
 }
