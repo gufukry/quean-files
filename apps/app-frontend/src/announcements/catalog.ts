@@ -30,6 +30,31 @@ export const ANNOUNCEMENT_CHANGE_TYPES: readonly AnnouncementChangeType[] = [
 
 export const launcherAnnouncements: readonly LauncherAnnouncement[] = [
     {
+        id: 'launcher-1.0.6',
+        version: '1.0.6',
+        publishedAt: '2026-10-14',
+        title: {
+            'en-US': 'QueAN Launcher 1.0.6',
+            'zh-CN': 'QueAN Launcher 1.0.6',
+        },
+        changes: {
+            added: [
+                {
+                    'en-US': 'Download progress is now shown on the Windows taskbar.',
+                    'zh-CN': 'Windows 任务栏显示下载进度。',
+                },
+            ],
+            changed: [
+                {
+                    'en-US':
+                        'For third-party (Yggdrasil) accounts, the “Add skin” button now opens the provider website.',
+                    'zh-CN':
+                        '第三方（Yggdrasil）账号的「添加皮肤」按钮改为打开服务商网站更换皮肤。',
+                },
+            ],
+        },
+    },
+    {
         id: 'launcher-1.0.5',
         version: '1.0.5',
         publishedAt: '2026-10-14',
